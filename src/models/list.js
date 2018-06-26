@@ -1,0 +1,48 @@
+import { queryFakeList, queryRegistrationList } from '../services/api';
+
+export default {
+  namespace: 'list',
+
+  state: {
+    list: [],
+  },
+
+  effects: {
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(queryFakeList, payload);
+      yield put({
+        type: 'queryList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
+    *fetchRegistrationList({ payload }, { call, put }) {
+      const response = yield call(queryRegistrationList, payload);
+      yield put({
+        type: 'queryList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
+    *appendFetch({ payload }, { call, put }) {
+      const response = yield call(queryFakeList, payload);
+      yield put({
+        type: 'appendList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
+  },
+
+  reducers: {
+    queryList(state, action) {
+      return {
+        ...state,
+        list: action.payload,
+      };
+    },
+    appendList(state, action) {
+      return {
+        ...state,
+        list: state.list.concat(action.payload),
+      };
+    },
+  },
+};
